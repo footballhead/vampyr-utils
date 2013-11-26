@@ -23,22 +23,23 @@ public class Con2PNG {
         String input = args[ 0 ];
         int width = Integer.parseInt( args[ 1 ] );
         int height = Integer.parseInt( args[ 2 ] );
-        String palletFile = args[ 3 ];
+        String paletteFile = args[ 3 ];
         String output = args[ 4 ];
         
         try {
             // load the data
             byte data[][] = loadConData( input, width, height );
             
-            // load the pallet
-            Color pallet[] = parsePalletFile( palletFile );
+            // load the palette
+            Color palette[] = parsePaletteFile( paletteFile );
             
-            // apply the pallet to the data
-            BufferedImage image = makeImageFromData( data, pallet );
+            // apply the palette to the data
+            BufferedImage image = makeImageFromData( data, palette );
             
             // save image
             ImageIO.write( image, "PNG", new File( output ) );
         } catch ( IOException ioe ) {
+            // oh no! just dump stack for now
             ioe.printStackTrace();
             System.exit( 1 );
         }
@@ -76,10 +77,10 @@ public class Con2PNG {
             return false;
         }
         
-        // make sure pallet file exists
+        // make sure palette file exists
         f = new File( args[ 3 ] );
         if ( !f.exists() ) {
-            System.out.println( "Pallet file doesn't exist!" );
+            System.out.println( "Palette file doesn't exist!" );
             return false;
         }
         
@@ -116,13 +117,13 @@ public class Con2PNG {
     }
 
     /**
-     * Parse the given pallet file, `file`, and turn each entry into the color
+     * Parse the given palette file, `file`, and turn each entry into the color
      * they represent, then stick them in an array and return it.
      *
-     * @param file The pallet file to parse
+     * @param file The palette file to parse
      * @return An array of Colors.
      */
-    private Color[] parsePalletFile( String file ) throws IOException {
+    private Color[] parsePaletteFile( String file ) throws IOException {
         Color ret[] = new Color[ 16 ];
         
         // open the file
@@ -162,21 +163,21 @@ public class Con2PNG {
     }
 
     /**
-     * Create an image from the data by applying the color pallet to it.
+     * Create an image from the data by applying the color palette to it.
      *
      * @remarks Image dimensions are taken from the dimensions of the input data.
-     * @param pallet An array of 16 colors.
+     * @param palette An array of 16 colors.
      * @param data A regtangular array of image data.
-     * @return A `BufferedImage`, the result of applying the pallet to each data value.
+     * @return A `BufferedImage`, the result of applying the palette to each data value.
      */
-    private BufferedImage makeImageFromData( byte[][] data, Color[] pallet ) {
+    private BufferedImage makeImageFromData( byte[][] data, Color[] palette ) {
         // create the image
         BufferedImage ret = new BufferedImage( data[ 0 ].length, data.length, BufferedImage.TYPE_INT_RGB );
         Graphics2D g2d = ret.createGraphics();
         
         for ( int x = 0 ; x < data[ 0 ].length ; x++ ) {
             for ( int y = 0 ; y < data.length ; y++ ) {
-                g2d.setColor( pallet[ data[ y ][ x ] ] );
+                g2d.setColor( palette[ data[ y ][ x ] ] );
                 g2d.fillRect( x, y, 2, 2 );
             }
         }
@@ -208,7 +209,7 @@ public class Con2PNG {
      * Print the program usage to stdout.
      */
     public static void print_usage() {
-        System.out.println( "usage: java Driver input width height pallet output" );
+        System.out.println( "usage: see README.md" );
     }
     
     public static void main( String args[] ) {
