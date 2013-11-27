@@ -23,51 +23,21 @@ Requirements
 A functioning version of Java is required. I'm not sure which version is the
 minimum.
 
-Usage
------
+Con2PNG
+-------
 
-First, compile (see below). Then run:
+Con2PNG is a utility which turns a _Vampyr_ image file, generally ending in 
+`.CON`, into an ordinary `.PNG` file.
 
-```
-java blackforestprogramming.vampyrutils.Con2PNG input.con width height palette.txt output.png
-```
+See Con2PNG.md for more info.
 
-where:
+Map2PNG
+-------
 
-  * `input.con` is the raw image data
-  * `width` is the width of the image
-  * `height` is the height of the image
-  * `palette.txt` is the palette file (see appropriate section)
-  * `output.png` is the output PNG file; it only does PNG so far
+Map2PNG is a utility which turns a _Vampyr_ `.MAP` file into a `.PNG` file using
+the provided tilesets.
 
-Compilation
------------
-
-In the project root run:
-
-```
-javac blackforestprogramming/vampyrutils/Con2PNG.java
-```
-
-Palette File
------------
-
-Images in _Vampyr_ only use 16 colors, stored as binary in the image file from
-`0x00` to `0x0F`. Therefore, the palette file contains 16 colors, one on each
-line; the first line is the color for `0x00`, the second line is the color for
-`0x01`, and so forth.
-
-Each line is formated like the following:
-
-```
-X,Y,Z
-```
-
-where `X` is red, `Y` is green, and `Z` is blue. Each of `X`, `Y`, and `Z` must
-be a number between 0 and 255, as color channels usually are.
-
-A sample palette file, `menu-palette.txt`, has been provided. It can be used to
-decode images used on the main menu, such as `ITEM.00[1-7]` or `SCROLL.PIC`.
+See Map2PNG.md for more info.
 
 The Future
 ----------
@@ -76,11 +46,12 @@ The Future
   * Split the CLI from the back-end libraries
   * GUI?
   * More error checking
+  * Saving to something other than PNG
 
 Side Note: Version Differences
 ------------------------------
 
-There are two versions of Vampyr: 1.1 and 2.0. In 1.1 there is a bug which
+There are two versions of _Vampyr_: 1.1 and 2.0. In 1.1 there is a bug which
 prevents the player from finishing a story-line critical quest, thereby
 preventing the completion of the game. Version 2.0 fixed that bug -- along with
 several others listed in the README -- and changed some of the graphics.

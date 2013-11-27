@@ -10,83 +10,29 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 
 public class Con2PNG {
-
-    
-    public Con2PNG( String[] args ) {
-        // check for valid command-line arguments; stop if not valid
-        if ( !isValidArgs( args ) ) {
-            print_usage();
-            System.exit( 1 );
-        }
-        
-        // now command-line should be valid; extract the info
-        String input = args[ 0 ];
-        int width = Integer.parseInt( args[ 1 ] );
-        int height = Integer.parseInt( args[ 2 ] );
-        String paletteFile = args[ 3 ];
-        String output = args[ 4 ];
-        
-        try {
-            // load the data
-            byte data[][] = loadConData( input, width, height );
-            
-            // load the palette
-            Color palette[] = parsePaletteFile( paletteFile );
-            
-            // apply the palette to the data
-            BufferedImage image = makeImageFromData( data, palette );
-            
-            // save image
-            ImageIO.write( image, "PNG", new File( output ) );
-        } catch ( IOException ioe ) {
-            // oh no! just dump stack for now
-            ioe.printStackTrace();
-            System.exit( 1 );
-        }
-    }
-    
     /**
-     * Given a command-line, determine whether it is valid.
+     * Determine whether the given string is a valid positive integer, that is,
+     * whether `Integer.parseInt` would through an exception.
      *
-     * @remarks Prints to stdout what is wrong with the given command-line.
-     * @param args An array of strings representing the command-line.
-     * @return true if valid, false otherwise
+     * @param str The String to check
+     * @return true if the string is an integer, false otherwise
      */
-    private boolean isValidArgs( String[] args ) {
-        // make sure enough args are given
-        if ( args.length != 5 ) {
-            System.out.println( "Not the right number of arguments!" );
-            return false;
+    public static boolean isStringInteger( String str ) {
+        // special case where given an empty string; not valid
+        if ( str.length() == 0 ) return false;
+        
+        // check each character to make sure it is a digit
+        for ( char chr : str.toCharArray() ) {
+            if ( chr < '0' || chr > '9' ) return false;
         }
         
-        // check to make sure input file exists
-        File f = new File( args[ 0 ] );
-        if ( !f.exists() ) {
-            System.out.println( "Input file does not exist!" );
-            return false;
-        }
-        
-        // make sure width and height are integers
-        if ( !isStringInteger( args[1] ) ) {
-            System.out.println( "Width is not a valid integer!" );
-            return false;
-        }
-        
-        if ( !isStringInteger( args[2] ) ) {
-            System.out.println( "Height is not a valid integer!" );
-            return false;
-        }
-        
-        // make sure palette file exists
-        f = new File( args[ 3 ] );
-        if ( !f.exists() ) {
-            System.out.println( "Palette file doesn't exist!" );
-            return false;
-        }
-        
+        // all good!
         return true;
-        // TODO: Check if output file exists and ask if want to overwite.
     }
+ 
+    /**************************************************************************
+    *    PUBLIC                                                               *
+    **************************************************************************/ 
 
     /**
      * Load the binary data from `file` and use the given dimensions to store it
@@ -98,7 +44,7 @@ public class Con2PNG {
      * @param height The height of the image.
      * @return A rectangular array of bytes representing the image.
      */
-    private byte[][] loadConData( String file, int width, int height ) throws IOException {
+    public static byte[][] loadConData( String file, int width, int height ) throws IOException {
         byte[][] data = new byte[ height ][ width ];
         
         // open the file
@@ -123,7 +69,7 @@ public class Con2PNG {
      * @param file The palette file to parse
      * @return An array of Colors.
      */
-    private Color[] parsePaletteFile( String file ) throws IOException {
+    public static Color[] parsePaletteFile( String file ) throws IOException {
         Color ret[] = new Color[ 16 ];
         
         // open the file
@@ -170,7 +116,7 @@ public class Con2PNG {
      * @param data A regtangular array of image data.
      * @return A `BufferedImage`, the result of applying the palette to each data value.
      */
-    private BufferedImage makeImageFromData( byte[][] data, Color[] palette ) {
+    public static BufferedImage makeImageFromData( byte[][] data, Color[] palette ) {
         // create the image
         BufferedImage ret = new BufferedImage( data[ 0 ].length, data.length, BufferedImage.TYPE_INT_RGB );
         Graphics2D g2d = ret.createGraphics();
@@ -184,35 +130,145 @@ public class Con2PNG {
         
         return ret; // TODO: Fill me in!
     }
+    
+    /**
+     * Load the `.con` file turn it into a bitmap.
+     *
+     * @remark Provided for convenience for outside use; essentially calls
+     *         loadConData, parsePaletteFile, and makeImageFromData.
+     * @param input The input filename.
+     * @param width The width of the image.
+     * @param height The height of the image.
+     * @param paletteFile The filename of the palette definition.
+     * @return A BufferedImage
+     */
+    public static BufferedImage conToBitmap( String input, int width, int height, String paletteFile ) throws IOException {
+        // load the data
+        System.out.println( "Loading image data..." );
+        byte data[][] = loadConData( input, width, height );
+        
+        // load the palette
+        System.out.println( "Loading palette definitions..." );
+        Color palette[] = parsePaletteFile( paletteFile );
+        
+        // apply the palette to the data
+        System.out.println( "Applying palette to image data..." );
+        BufferedImage image = makeImageFromData( data, palette );
+        
+        // return the image
+        System.out.println( "Returning image..." );
+        return image;
+    }
+
+    /**************************************************************************
+    *    PRIVATE                                                              *
+    **************************************************************************/ 
 
     /**
-     * Determine whether the given string is a valid positive integer, that is,
-     * whether `Integer.parseInt` would through an exception.
+     * Given a command-line, determine whether it is valid.
      *
-     * @param str The String to check
-     * @return true if the string is an integer, false otherwise
+     * @remarks Prints to stdout what is wrong with the given command-line.
+     * @param args An array of strings representing the command-line.
+     * @return true if valid, false otherwise
      */
-    private static boolean isStringInteger( String str ) {
-        // special case where given an empty string; not valid
-        if ( str.length() == 0 ) return false;
-        
-        // check each character to make sure it is a digit
-        for ( char chr : str.toCharArray() ) {
-            if ( chr < '0' || chr > '9' ) return false;
+    private static boolean areArgsValid( String[] args ) {
+        // make sure enough args are given
+        if ( args.length != 5 ) {
+            System.out.println( "Not the right number of arguments!" );
+            return false;
         }
         
-        // all good!
+        // check to make sure input file exists
+        File f = new File( args[ 0 ] );
+        if ( !f.exists() ) {
+            System.out.println( "Input file does not exist!" );
+            return false;
+        }
+        
+        // make sure width and height are integers
+        if ( !isStringInteger( args[1] ) ) {
+            System.out.println( "Width is not a valid integer!" );
+            return false;
+        }
+        
+        if ( !isStringInteger( args[2] ) ) {
+            System.out.println( "Height is not a valid integer!" );
+            return false;
+        }
+        
+        // make sure palette file exists
+        f = new File( args[ 3 ] );
+        if ( !f.exists() ) {
+            System.out.println( "Palette file doesn't exist!" );
+            return false;
+        }
+        
         return true;
+        // TODO: Check if output file exists and ask if want to overwite.
+    }
+
+
+    /**
+     * Parrot the given command-line parameters to stdout.
+     */
+    private static void print_parameters( String input, int width, int height, String paletteFile, String output ) {
+        System.out.println( "input file = " + input );
+        System.out.println( "width = " + width );
+        System.out.println( "height = " + height );
+        System.out.println( "palette file = " + paletteFile );
+        System.out.println( "output file = " + output );
+        System.out.println( "" );
     }
     
     /**
      * Print the program usage to stdout.
      */
-    public static void print_usage() {
-        System.out.println( "usage: see README.md" );
+    private static void print_usage() {
+        System.out.println( "see README.md for proper usage" );
     }
     
+    /**************************************************************************
+    *    MAIN                                                                 *
+    **************************************************************************/ 
+    
+    /**
+     * Load the data, load the colors, apply the colors to the data, and save
+     * the resulting image.
+     */
     public static void main( String args[] ) {
-        new Con2PNG( args );
+        System.out.println( "" );
+        System.out.println( "Con2PNG" );
+        
+        // check for valid command-line arguments; stop if not valid
+        if ( !areArgsValid( args ) ) {
+            print_usage();
+            System.exit( 1 );
+        }
+        
+        // now command-line should be valid; extract the info
+        String input = args[ 0 ];
+        int width = Integer.parseInt( args[ 1 ] );
+        int height = Integer.parseInt( args[ 2 ] );
+        String paletteFile = args[ 3 ];
+        String output = args[ 4 ];
+
+        // for some extra verbosity
+        print_parameters( input, width, height, paletteFile, output );
+        
+        try {
+            // manipulate the data
+            BufferedImage image = conToBitmap( input, width, height, paletteFile );
+            
+            // save image
+            System.out.println( "Saving to output file..." );
+            ImageIO.write( image, "PNG", new File( output ) );
+            
+            System.out.println( "Done!" );
+            System.out.println( "" );
+        } catch ( IOException ioe ) {
+            // oh no! just dump stack for now
+            ioe.printStackTrace();
+            System.exit( 1 );
+        }
     }
 }
