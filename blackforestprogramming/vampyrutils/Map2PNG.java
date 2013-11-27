@@ -19,6 +19,12 @@ import java.awt.Graphics2D;
  * @see Con2PNG
  */
 public class Map2PNG {
+
+    /**
+     * Hide the constructor.
+     */
+    private Map2PNG() {}
+
     /**
      * Determine whether the given string is a valid positive integer, that is,
      * whether `Integer.parseInt` would through an exception.
