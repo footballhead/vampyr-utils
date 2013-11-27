@@ -1,8 +1,8 @@
 Vampyr: The Talisman of Invocation Utilities
 ============================================
 
-These are utilities, made in Java, for decoding files from _Vampyr: Talisman of
-Invocation_, the 1989 DOS game by Victor Shao and Brian Weston.
+vampyr-utils are utilities made in Java for decoding files from _Vampyr:
+Talisman of Invocation_, the 1989 DOS game made by Victor Shao and Brian Weston.
 
 Courtesy of the Internet Archive, the game can be downloaded here:
 
@@ -10,8 +10,8 @@ Courtesy of the Internet Archive, the game can be downloaded here:
 https://archive.org/details/VampyrTheTalismanOfInvocation
 ```
 
-For the best experience, play using DOSBox, which is available at the DOSBox
-website:
+Unless you have an MS-DOS computer, I'd suggest playing _Vampyr_ using DOSBox.
+That can be downloaded from the DOSBox website:
 
 ```
 http://www.dosbox.com/
@@ -20,8 +20,14 @@ http://www.dosbox.com/
 Requirements
 ------------
 
-A functioning version of Java is required. I'm not sure which version is the
-minimum.
+A functioning version of the Java Development Kit is required to compile
+the sources. No clue which version is the minimum.
+
+If you don't have the JDK you can download it from Oracle:
+
+```
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+```
 
 Con2PNG
 -------
@@ -39,16 +45,31 @@ the provided tilesets.
 
 See `Map2PNG.md` for more info.
 
-The Future
-----------
+License
+-------
+
+vampyr-utils is licensed under the _Do What the Fuck You Want To_ public
+license. A copy can be found in the `LICENSE` file in the base of the project
+directory. You can also find a copy at the license website:
+
+```
+http://www.wtfpl.net
+```
+
+This license, suprisingly, allows you to just do what the fuck you want to with
+the files in the project directory. I really don't care; have fun!
+
+Future Plans
+------------
 
   * Add a map reader which accepts .CON files
   * Split the CLI from the back-end libraries
   * GUI?
   * More error checking
   * Saving to something other than PNG
+  * Makefile which compiles and creates `.jar`s
 
-Side Note: Version Differences
+I Digress: Version Differences
 ------------------------------
 
 There are two versions of _Vampyr_: 1.1 and 2.0. In 1.1 there is a bug which
