@@ -9,7 +9,22 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 
+/**
+ * This class provides many static methods, all with the purpose of turning
+ * image files from Vampyr into .PNG files.
+ *
+ * The class cannot be instantiated. A CLI is programmed into the `main` method.
+ * 
+ * @author Michael Hitchens
+ * @see Map2PNG
+ */
 public class Con2PNG {
+
+    /**
+     * Hide the constructor; the class should never be instantiated.
+     */
+    private Con2PNG() {}
+
     /**
      * Determine whether the given string is a valid positive integer, that is,
      * whether `Integer.parseInt` would through an exception.

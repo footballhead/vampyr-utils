@@ -9,6 +9,15 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 
+/**
+ * This class provides many static methods, all with the purpose of rendering
+ * map files from Vampyr.
+ *
+ * The class cannot be instantiated. A CLI is programmed into the `main` method.
+ * 
+ * @author Michael Hitchens
+ * @see Con2PNG
+ */
 public class Map2PNG {
     /**
      * Determine whether the given string is a valid positive integer, that is,
