@@ -29,7 +29,7 @@ Con2PNG
 Con2PNG is a utility which turns a _Vampyr_ image file, generally ending in 
 `.CON`, into an ordinary `.PNG` file.
 
-See Con2PNG.md for more info.
+See `Con2PNG.md` for more info.
 
 Map2PNG
 -------
@@ -37,7 +37,7 @@ Map2PNG
 Map2PNG is a utility which turns a _Vampyr_ `.MAP` file into a `.PNG` file using
 the provided tilesets.
 
-See Map2PNG.md for more info.
+See `Map2PNG.md` for more info.
 
 The Future
 ----------
