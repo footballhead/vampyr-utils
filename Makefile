@@ -16,7 +16,7 @@ example: main
 	@echo The files have been saved to ./example/output/
 
 clean:
-	rm -r build
-	rm -r example/output
+	rm -f -r build
+	rm -f -r example/output
 
 .PHONY: clean main example
