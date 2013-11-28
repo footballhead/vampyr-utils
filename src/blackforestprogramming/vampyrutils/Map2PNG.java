@@ -113,7 +113,7 @@ public class Map2PNG {
      */
     private static void print_usage() {
         // java ... input.map width height univ.png tileset.png output.png
-        System.out.println( "see README.md for proper usage" );
+        System.out.println( "usage: java -jar Map2PNG.jar input.map width height univ.png tileset.png output.png" );
     }
 
     /**
@@ -173,14 +173,14 @@ public class Map2PNG {
      * Main
      */
     public static void main( String[] args ) {
-        System.out.println( "" );
-        System.out.println( "Map2PNG" );
-        
         // check for valid command-line arguments; stop if not valid
         if ( !areArgsValid( args ) ) {
             print_usage();
             System.exit( 1 );
         }
+        
+        System.out.println( "" );
+        System.out.println( "Map2PNG" );
         
         // now command-line should be valid; extract the info
         String input = args[ 0 ];

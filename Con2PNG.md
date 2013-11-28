@@ -8,14 +8,16 @@ Compilation
 -----------
 
 ```
-javac blackforestprogramming/vampyrutils/Con2PNG.java
+make
 ```
+
+Built targets can be found under the `build` directory.
 
 CLI Usage
 ---------
 
 ```
-java blackforestprogramming.vampyrutils.Con2PNG input.con width height palette.txt output.png
+java -jar Con2PNG.jar input.con width height palette.txt output.png
 ```
 
 where:
@@ -54,19 +56,18 @@ where:
   
 Each of `R`, `G`, and `B` is a number between 0 and 255.
 
-`menu-palette.png` and `game-palette.png` are provided as sample palette
-definition files. Between those two palette definition files, all images in the
-_Vampyr_ directory can be properly turned into bitmaps.
+Sample palette definition files can be found in the `palette` directory, in the
+root of the project.
 
 Example
 -------
 
 ```
-java blackforestprogramming.vampyrutils.Con2PNG ITEM.001 25 25 menu-palette.txt ITEM.001.png
+java -jar Con2PNG.jar ITEM.001 25 25 menu-palette.txt ITEM.001.png
 ```
 
 The above example uses the palette definition from `menu-palette.txt` to turn
 `ITEM.001`, a 25x25 px image used on one of the credits screens, into
 `ITEM.001.png`.
 
-`ITEM.001` can be found in the game directory.
+`ITEM.001` can be found in the _Vampyr_ game directory.

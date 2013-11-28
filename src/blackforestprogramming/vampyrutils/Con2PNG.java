@@ -239,7 +239,7 @@ public class Con2PNG {
      * Print the program usage to stdout.
      */
     private static void print_usage() {
-        System.out.println( "see README.md for proper usage" );
+        System.out.println( "usage: java -jar Con2PNG.jar input.con width height output.png" );
     }
     
     /**************************************************************************
@@ -251,14 +251,14 @@ public class Con2PNG {
      * the resulting image.
      */
     public static void main( String args[] ) {
-        System.out.println( "" );
-        System.out.println( "Con2PNG" );
-        
         // check for valid command-line arguments; stop if not valid
         if ( !areArgsValid( args ) ) {
             print_usage();
             System.exit( 1 );
         }
+        
+        System.out.println( "" );
+        System.out.println( "Con2PNG" );
         
         // now command-line should be valid; extract the info
         String input = args[ 0 ];

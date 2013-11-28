@@ -62,12 +62,11 @@ the files in the project directory. I really don't care; have fun!
 Future Plans
 ------------
 
-  * Add a map reader which accepts .CON files
-  * Split the CLI from the back-end libraries
+  * Split the CLI from the libraries
   * GUI?
+  * Split shared functionality into `Shared.java`
   * More error checking
   * Saving to something other than PNG
-  * Makefile which compiles and creates `.jar`s
 
 I Digress: Version Differences
 ------------------------------
