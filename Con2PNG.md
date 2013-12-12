@@ -8,7 +8,7 @@ Compilation
 -----------
 
 ```
-make
+ant
 ```
 
 Built targets can be found under the `build` directory.

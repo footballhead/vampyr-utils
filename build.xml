@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project name="Vampyr Utilities" default="jar">
+
+    <target name="compile" description="just compile the Java source code to class files">
+        <mkdir dir="build"/>
+        <javac srcdir="src" destdir="build"/>
+    </target>
+    
+    <target name="jar" depends="compile" description="turn the source into separate jars">
+        <jar destfile="Map2PNG.jar" basedir="build">
+            <manifest>
+                <attribute name="Main-Class" value="blackforestprogramming.vampyrutils.Map2PNG"/>
+            </manifest>
+        </jar>
+        <jar destfile="Con2PNG.jar" basedir="build" excludes="**/Map2PNG.class">
+            <manifest>
+                <attribute name="Main-Class" value="blackforestprogramming.vampyrutils.Con2PNG"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    <target name="example" depends="jar" description="run the example">
+        <mkdir dir="example/output"/>
+        <java jar="Con2PNG.jar" fork="true">
+            <arg line="example/UNIV.CON 270 18 palettes/game-palette.txt example/output/UNIV.CON.png"/>
+        </java>
+        <java jar="Con2PNG.jar" fork="true">
+            <arg line="example/AFTER.CON 360 18 palettes/game-palette.txt example/output/AFTER.CON.png"/>
+        </java>
+        <java jar="Map2PNG.jar" fork="true">
+            <arg line="example/AFTER.MAP 50 50 example/output/UNIV.CON.png example/output/AFTER.CON.png example/output/AFTER.MAP.png"/>
+        </java>
+    </target>
+    
+    <target name="clean" description="remove jars and compiled sources">
+        <delete dir="build"/>
+        <delete dir="example/output"/>
+        <delete file="Map2PNG.jar"/>
+        <delete file="Con2PNG.jar"/>
+    </target>
+    
+</project>

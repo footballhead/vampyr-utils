@@ -20,14 +20,8 @@ http://www.dosbox.com/
 Requirements
 ------------
 
-A functioning version of the Java Development Kit is required to compile
-the sources. No clue which version is the minimum.
-
-If you don't have the JDK you can download it from Oracle:
-
-```
-http://www.oracle.com/technetwork/java/javase/downloads/index.html
-```
+  * Java Development Kit
+  * Apache Ant
 
 Con2PNG
 -------

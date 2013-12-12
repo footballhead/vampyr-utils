@@ -8,7 +8,7 @@ Compilation
 -----------
 
 ```
-make
+ant
 ```
 
 Built targets can be found under the `build` directory.
@@ -70,5 +70,5 @@ sample palette which can be found in the `palettes` directory.
 This example can also be built with the following:
 
 ```
-make example
+ant example
 ```
