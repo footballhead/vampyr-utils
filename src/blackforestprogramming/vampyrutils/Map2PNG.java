@@ -1,9 +1,6 @@
 package blackforestprogramming.vampyrutils;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
 import javax.imageio.ImageIO;

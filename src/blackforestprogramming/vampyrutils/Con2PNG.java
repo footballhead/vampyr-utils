@@ -69,9 +69,15 @@ public class Con2PNG {
         for ( int x = 0 ; x < width ; x++ ) {
             for ( int y = 0 ; y < height ; y++ ) {
                 data[ y ][ x ] = ( byte )in.read();
-                if ( data[ y ][ x ] == -1 ) throw new IOException( "Dimensions off; ran out of input data!" );
+                
+                if ( data[ y ][ x ] == -1 ) {
+                	in.close();
+                	throw new IOException( "Dimensions off; ran out of input data!" );
+                }
             }
         }
+        
+        in.close();
         
         // return the data
         return data; // TODO: Fill me in!
@@ -96,20 +102,32 @@ public class Con2PNG {
             
             // read the line and throw an error if got EOF
             String line = in.readLine();
-            if ( in == null ) throw new IOException( "Malformed file content: expected another color, got EOF!" );
+            if ( line == null ) {
+            	in.close();
+            	throw new IOException( "Malformed file content: expected another color, got EOF!" );
+            }
             
             // split the line around the commas and throw an error if not enough parts
             String parts[] = line.split( "," );
-            if ( parts.length != rgb.length ) throw new IOException( "Malformed file content: need only red,green,blue!" );
+            if ( parts.length != rgb.length ) {
+            	in.close();
+            	throw new IOException( "Malformed file content: need only red,green,blue!" );
+            }
             
             // for each part
             for ( int ii = 0 ; ii < parts.length ; ii++ ) {
                 // if it can't be turned into an integer throw an error
-                if ( !isStringInteger( parts[ ii ] ) ) throw new IOException( "Malformed file content: channel isn't a valid number!" );
+                if ( !isStringInteger( parts[ ii ] ) ) {
+                	in.close();
+                	throw new IOException( "Malformed file content: channel isn't a valid number!" );
+                }
                 
                 // if it is not a valid value throw an error
                 rgb[ ii ] = Integer.parseInt( parts[ ii ] );
-                if ( rgb[ ii ] < 0 || rgb[ ii ] > 255 ) throw new IOException( "Malformed file content: channel isn't a unsigned byte!" );
+                if ( rgb[ ii ] < 0 || rgb[ ii ] > 255 ) {
+                	in.close();
+                	throw new IOException( "Malformed file content: channel isn't a unsigned byte!" );
+                }
             }
             
             // have good data to make a color

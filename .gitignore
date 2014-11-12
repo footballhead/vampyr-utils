@@ -2,3 +2,6 @@
 build
 Con2PNG.jar
 Map2PNG.jar
+/bin/
+.classpath
+.project
