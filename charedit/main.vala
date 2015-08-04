@@ -12,13 +12,15 @@ public class CharacterEditor : Gtk.Window {
 	RaceDropdownBox race_dropdown;
 	/** @brief Where level is entered. */
 	NameValuePair level_pair;
+	/** @brief Where life is entered. */
+	NameValuePair life_pair;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
 		this.title = "Vampyr Character Editor";
 		this.window_position = Gtk.WindowPosition.CENTER;
 		this.destroy.connect (Gtk.main_quit);
-		this.set_default_size (350, 70);
+		this.set_default_size (350, 100);
 		// TODO make unresizable
 
 		create_interface ();
@@ -45,6 +47,9 @@ public class CharacterEditor : Gtk.Window {
 			model.set_race ( Race.from_string (race_dropdown.get_value ()));
 		});
 
+		life_pair = new NameValuePair ("Life", "");
+		life_pair.entry.changed.connect (life_changed);
+
 		level_pair = new NameValuePair ("Level", "");
 		level_pair.entry.changed.connect (level_changed);
 
@@ -53,6 +58,7 @@ public class CharacterEditor : Gtk.Window {
 		box.pack_start (name_pair, false, false, 4);
 		box.pack_start (race_dropdown, false, false, 4);
 		box.pack_start (level_pair, false, false, 4);
+		box.pack_start (life_pair, false, false, 4);
 
 		this.add (box);
 	}
@@ -83,6 +89,18 @@ public class CharacterEditor : Gtk.Window {
 		model.set_level (new_level_int);
 	}
 
+	private void life_changed () {
+		string new_life_str = life_pair.get_value ();
+		int new_life_int = int.parse (new_life_str);
+		if (new_life_int > 32767) {
+			life_pair.set_value ("32767");
+		} else if (new_life_int < -32768) {
+			life_pair.set_value ("-32768");
+		}
+
+		model.set_life (new_life_int);
+	}
+
 	/**
 	 * @brief Open the file chooser and load a save if selected.
 	 * @remark A callback for clicking the "Open..." button.
@@ -99,6 +117,7 @@ public class CharacterEditor : Gtk.Window {
 			name_pair.set_value (model.get_name ());
 			race_dropdown.set_value (model.get_race ());
 			level_pair.set_value (model.get_level ().to_string ());
+			life_pair.set_value (model.get_life ().to_string ());
 		}
 
 		chooser.close ();
@@ -140,6 +159,8 @@ class NameValuePair : Gtk.Box {
 
 		this.pack_start (name_label, true, true, 4 );
 		this.pack_start (entry, true, true, 4 );
+
+		stdout.printf ("DEBUG: label name: %s\n", name);
 	}
 
 	public string get_value () {
