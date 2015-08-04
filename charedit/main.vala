@@ -11,9 +11,9 @@ public class CharacterEditor : Gtk.Window {
 	/** @brief Where race is chosen */
 	RaceDropdownBox race_dropdown;
 	/** @brief Where level is entered. */
-	NameValuePair level_pair;
+	IntEntry level_entry;
 	/** @brief Where life is entered. */
-	NameValuePair life_pair;
+	IntEntry life_entry;
 	/** @brief Place for entering gold. */
 	IntEntry gold_entry;
 	/** @brief Place for entering XP. */
@@ -36,6 +36,7 @@ public class CharacterEditor : Gtk.Window {
 	private void create_interface () {
 		Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 
+
 		var open_btn = new Gtk.Button.with_label ("Open...");
 		open_btn.clicked.connect (open_chooser);
 
@@ -46,32 +47,24 @@ public class CharacterEditor : Gtk.Window {
 		var save_open_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 		save_open_box.pack_start (open_btn, true, true, 4);
 		save_open_box.pack_start (save_btn, true, true, 4);
+		box.pack_start (save_open_box, false, false, 4);
+
 
 		name_pair = new NameValuePair ("Name", "");
 		name_pair.entry.changed.connect (name_changed);
+		box.pack_start (name_pair, false, false, 0);
 
 		race_dropdown = new RaceDropdownBox ("Race", Race.all_as_string ());
 		race_dropdown.combobox.changed.connect(() => {
 			model.set_race ( Race.from_string (race_dropdown.get_value ()));
 		});
+		box.pack_start (race_dropdown, false, false, 0);
 
-		life_pair = new NameValuePair ("Life", "");
-		life_pair.entry.changed.connect (life_changed);
-
-		level_pair = new NameValuePair ("Level", "");
-		level_pair.entry.changed.connect (level_changed);
-
-		box.pack_start (save_open_box, false, false, 4);
-		box.pack_start (name_pair, false, false, 4);
-		box.pack_start (race_dropdown, false, false, 4);
-		box.pack_start (level_pair, false, false, 4);
-		box.pack_start (life_pair, false, false, 4);
-
-		gold_entry = new IntEntry ("Gold", -32768, 32767, 0);
-		gold_entry.int_entry.value_changed.connect(() => {
-			model.set_gold (gold_entry.get_value_as_int ());
+		level_entry = new IntEntry ("Level", 0, 255, 0);
+		level_entry.int_entry.value_changed.connect(() => {
+			model.set_level (level_entry.get_value_as_int ());
 		});
-		box.pack_start (gold_entry, false, false, 0);
+		box.pack_start (level_entry, false, false, 0);
 
 		exp_entry = new IntEntry ("XP", -2147483648, 2147483647, 0);
 		exp_entry.int_entry.value_changed.connect(() => {
@@ -79,11 +72,24 @@ public class CharacterEditor : Gtk.Window {
 		});
 		box.pack_start (exp_entry, false, false, 0);
 
+		life_entry = new IntEntry ("Life", -32768, 32767, 0);
+		life_entry.int_entry.value_changed.connect(() => {
+			model.set_life (life_entry.get_value_as_int ());
+		});
+		box.pack_start (life_entry, false, false, 0);
+
 		magic_entry = new IntEntry ("Magic", 0, 255, 0);
 		magic_entry.int_entry.value_changed.connect(() => {
 			model.set_magic (magic_entry.get_value_as_int ());
 		});
 		box.pack_start (magic_entry, false, false, 0);
+
+		gold_entry = new IntEntry ("Gold", -32768, 32767, 0);
+		gold_entry.int_entry.value_changed.connect(() => {
+			model.set_gold (gold_entry.get_value_as_int ());
+		});
+		box.pack_start (gold_entry, false, false, 0);
+
 
 		this.add (box);
 	}
@@ -103,8 +109,8 @@ public class CharacterEditor : Gtk.Window {
 			save_btn.set_sensitive (true);
 			name_pair.set_value (model.get_name ());
 			race_dropdown.set_value (model.get_race ());
-			level_pair.set_value (model.get_level ().to_string ());
-			life_pair.set_value (model.get_life ().to_string ());
+			level_entry.set_value (model.get_level ());
+			life_entry.set_value (model.get_life ());
 			gold_entry.set_value (model.get_gold ());
 			exp_entry.set_value (model.get_exp ());
 			magic_entry.set_value (model.get_magic ());
@@ -126,32 +132,6 @@ public class CharacterEditor : Gtk.Window {
 
 		model.set_name (new_name);
 	}
-
-	private void level_changed () {
-		string new_level_str = level_pair.get_value ();
-		int new_level_int = int.parse (new_level_str);
-		if (new_level_int > 255) {
-			level_pair.set_value ("255");
-		} else if (new_level_int < 0) {
-			level_pair.set_value ("0");
-		}
-
-		model.set_level (new_level_int);
-	}
-
-	private void life_changed () {
-		string new_life_str = life_pair.get_value ();
-		int new_life_int = int.parse (new_life_str);
-		if (new_life_int > 32767) {
-			life_pair.set_value ("32767");
-		} else if (new_life_int < -32768) {
-			life_pair.set_value ("-32768");
-		}
-
-		model.set_life (new_life_int);
-	}
-
-
 
 	/**
 	 * @brief Save the modified character data to the file.
@@ -187,8 +167,8 @@ class NameValuePair : Gtk.Box {
 		entry = new Gtk.Entry ();
 		set_value (def_val);
 
-		this.pack_start (name_label, true, true, 4 );
-		this.pack_start (entry, true, true, 4 );
+		this.pack_start (name_label, false, false, 0 );
+		this.pack_start (entry, true, true, 0 );
 
 		stdout.printf ("DEBUG: label name: %s\n", name);
 	}
@@ -216,8 +196,8 @@ class RaceDropdownBox : Gtk.Box {
 			combobox.append_text (str);
 		}
 
-		this.pack_start (name_label, true, true, 4 );
-		this.pack_start (combobox, true, true, 4 );
+		this.pack_start (name_label, false, false, 0 );
+		this.pack_start (combobox, true, true, 0 );
 	}
 
 	public string get_value () {

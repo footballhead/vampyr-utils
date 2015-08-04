@@ -32,8 +32,8 @@ class IntEntry : Gtk.Box {
 
 		set_value (def_value);
 
-		this.pack_start (this.label, false, false, 4);
-		this.pack_start (this.int_entry, true, true, 4);
+		this.pack_start (this.label, false, false, 0);
+		this.pack_start (this.int_entry, true, true, 0);
 	}
 
 	/**
