@@ -21,6 +21,8 @@ class PlayerModel {
 	private int life;
 	/** @brief Current amount of gold the player is carrying. */
 	private int gold;
+	/** @brief Current player XP. */
+	private int xp;
 
 	/**
 	 * @brief Load a player from a save file.
@@ -45,6 +47,7 @@ class PlayerModel {
 		life = 0 | raw_buffer[13] | (raw_buffer[14] << 8);
 		// next 2 bytes are current life, which we don't care about
 		set_gold (0 | raw_buffer[17] | (raw_buffer[18] << 8));
+		set_exp (0 | raw_buffer[19] | (raw_buffer[20] << 8) | (raw_buffer[21] << 16) | (raw_buffer[22] << 24));
 	}
 
 	/**
@@ -70,6 +73,11 @@ class PlayerModel {
 
 		raw_buffer[17] = (uint8)(gold & 0xff);
 		raw_buffer[18] = (uint8)((gold >> 8) & 0xff);
+
+		raw_buffer[19] = (uint8)(xp & 0xff);
+		raw_buffer[20] = (uint8)((xp >> 8) & 0xff);
+		raw_buffer[21] = (uint8)((xp >> 16) & 0xff);
+		raw_buffer[22] = (uint8)((xp >> 24) & 0xff);
 
 		FileIOStream iostream = file.open_readwrite ();
 		OutputStream output = iostream.output_stream;
@@ -132,6 +140,15 @@ class PlayerModel {
 		stdout.printf ("DEBUG: Set gold %d\n", gold);
 	}
 
+	/**
+	 * @brief Set the player XP, sanitizing input.
+	 * @param new_exp The new value for XP.
+	 */
+	public void set_exp (int new_exp) {
+		xp = new_exp;
+		stdout.printf ("DEBUG: Set XP %d\n", xp);
+	}
+
 	public File get_file () {
 		return this.file;
 	}
@@ -154,6 +171,10 @@ class PlayerModel {
 
 	public int get_gold () {
 		return gold;
+	}
+
+	public int get_exp() {
+		return xp;
 	}
 }
 

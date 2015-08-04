@@ -16,6 +16,8 @@ public class CharacterEditor : Gtk.Window {
 	NameValuePair life_pair;
 	/** @brief Place for entering gold. */
 	IntEntry gold_entry;
+	/** @brief Place for entering XP. */
+	IntEntry exp_entry;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
@@ -65,9 +67,15 @@ public class CharacterEditor : Gtk.Window {
 
 		gold_entry = new IntEntry ("Gold", -32768, 32767, 0);
 		gold_entry.int_entry.value_changed.connect(() => {
-			model.set_gold (gold_entry.get_value ());
+			model.set_gold (gold_entry.get_value_as_int ());
 		});
 		box.pack_start (gold_entry, false, false, 0);
+
+		exp_entry = new IntEntry ("XP", -2147483648, 2147483647, 0);
+		exp_entry.int_entry.value_changed.connect(() => {
+			model.set_exp (exp_entry.get_value_as_int ());
+		});
+		box.pack_start (exp_entry, false, false, 0);
 
 		this.add (box);
 	}
@@ -128,6 +136,7 @@ public class CharacterEditor : Gtk.Window {
 			level_pair.set_value (model.get_level ().to_string ());
 			life_pair.set_value (model.get_life ().to_string ());
 			gold_entry.set_value (model.get_gold ());
+			exp_entry.set_value (model.get_exp ());
 		}
 
 		chooser.close ();

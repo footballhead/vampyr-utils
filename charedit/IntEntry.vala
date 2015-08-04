@@ -3,9 +3,9 @@ class IntEntry : Gtk.Box {
 	/** @brief A label attached to the component. */
 	private Gtk.Label label;
 	/** @brief The highest possible value that can be entered */
-	private int upper_bound;
+	private double upper_bound;
 	/** @brief The lowest possible value that can be entered */
-	private int lower_bound;
+	private double lower_bound;
 
 	/** @brief Spin Button for entering numbers; public to connect signals. */
 	public Gtk.SpinButton int_entry;
@@ -17,7 +17,7 @@ class IntEntry : Gtk.Box {
 	 * @param high The highest possible value.
 	 * @param def_val The default value.
 	 */
-	public IntEntry (string label, int low, int high, int def_value)
+	public IntEntry (string label, double low, double high, double def_value)
 			requires (low <= high)
 			requires (low <= def_value && def_value <= high)
 	{
@@ -37,18 +37,28 @@ class IntEntry : Gtk.Box {
 	}
 
 	/**
-	 * @brief Get the currently entered number.
+	 * @brief Get the currently entered number as an integer.
 	 * @return The value of the spin button.
 	 */
-	public int get_value () {
+	public int get_value_as_int () {
 		return int_entry.get_value_as_int();
 	}
+
+	/**
+	 * @brief Get the currently entered number as a double.
+	 * @return The value of the spin button.
+	 */
+	public double get_value () {
+		return int_entry.get_value ();
+	}
+
+
 
 	/**
 	 * @brief Modify the currently entered value.
 	 * @param new_value The new value to use; must be within component bounds.
 	 */
-	public void set_value (int new_value)
+	public void set_value (double new_value)
 			requires (this.lower_bound <= new_value)
 			requires (new_value <= this.upper_bound)
 	{
