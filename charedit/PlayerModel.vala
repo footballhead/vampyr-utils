@@ -10,6 +10,7 @@ class PlayerModel {
 	 * @remark Player saves on disk are ALWAYS 77 bytes long.
 	 */
 	private uint8[] raw_buffer = new uint8[77];
+
 	/** @brief The player name, never more than 10 characters. */
 	private string name;
 	/** @brief A valid player race. */
@@ -18,6 +19,8 @@ class PlayerModel {
 	private int level;
 	/** @brief The player life, in the range of a signed short */
 	private int life;
+	/** @brief Current amount of gold the player is carrying. */
+	private int gold;
 
 	/**
 	 * @brief Load a player from a save file.
@@ -40,6 +43,8 @@ class PlayerModel {
 		race = (Race)raw_buffer[11];
 		level = (int)raw_buffer[12];
 		life = 0 | raw_buffer[13] | (raw_buffer[14] << 8);
+		// next 2 bytes are current life, which we don't care about
+		set_gold (0 | raw_buffer[17] | (raw_buffer[18] << 8));
 	}
 
 	/**
@@ -63,19 +68,13 @@ class PlayerModel {
 		raw_buffer[15] = (uint8)(life & 0xff);
 		raw_buffer[16] = (uint8)( (life >> 8) & 0xff );
 
+		raw_buffer[17] = (uint8)(gold & 0xff);
+		raw_buffer[18] = (uint8)((gold >> 8) & 0xff);
+
 		FileIOStream iostream = file.open_readwrite ();
 		OutputStream output = iostream.output_stream;
 		size_t bytes_written = 0;
 		output.write_all (raw_buffer, out bytes_written);
-	}
-
-
-	public File get_file () {
-		return this.file;
-	}
-
-	public string get_name () {
-		return name;
 	}
 
 	/**
@@ -94,10 +93,6 @@ class PlayerModel {
 		stdout.printf ("DEBUG: %s\n", short_name);
 	}
 
-	public Race get_race () {
-		return race;
-	}
-
 	public void set_race (Race race) {
 		this.race = race;
 		stdout.printf ("DEBUG: Set race %s\n", race.to_string ());
@@ -114,15 +109,12 @@ class PlayerModel {
 		stdout.printf ("DEBUG: Set level %d\n", valid_level);
 	}
 
-	public int get_level () {
-		return level;
-	}
-
 	/**
 	 * @brief Set the player life, sanitizing input.
 	 * @param new_life The life value we want to use.
 	 * @remark The life must be an signed short (-32768 to 32767).
-	 * @remark Life represents both current and max.
+	 * @remark Life represents both current and max; whenever you save we
+	 *         essentially heal your character.
 	 */
 	public void set_life (int new_life) {
 		int valid_life = new_life.clamp (-32768, 32767);
@@ -130,8 +122,38 @@ class PlayerModel {
 		stdout.printf ("DEBUG: Set life %d\n", valid_life);
 	}
 
+	/**
+	 * @brief Set the player gold, sanitizing input.
+	 * @param new_gold The gold value we want to use.
+	 * @remark The gold must be an signed short (-32768 to 32767).
+	 */
+	public void set_gold (int new_gold) {
+		gold = new_gold.clamp (-32768, 32767);
+		stdout.printf ("DEBUG: Set gold %d\n", gold);
+	}
+
+	public File get_file () {
+		return this.file;
+	}
+
+	public string get_name () {
+		return name;
+	}
+
+	public Race get_race () {
+		return race;
+	}
+
+	public int get_level () {
+		return level;
+	}
+
 	public int get_life () {
 		return life;
 	}
 
+	public int get_gold () {
+		return gold;
+	}
 }
+

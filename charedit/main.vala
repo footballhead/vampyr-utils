@@ -14,6 +14,8 @@ public class CharacterEditor : Gtk.Window {
 	NameValuePair level_pair;
 	/** @brief Where life is entered. */
 	NameValuePair life_pair;
+	/** @brief Place for entering gold. */
+	IntEntry gold_entry;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
@@ -28,6 +30,8 @@ public class CharacterEditor : Gtk.Window {
 
 	/** @brief Add all the widgets to the window. */
 	private void create_interface () {
+		Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+
 		var open_btn = new Gtk.Button.with_label ("Open...");
 		open_btn.clicked.connect (open_chooser);
 
@@ -53,12 +57,17 @@ public class CharacterEditor : Gtk.Window {
 		level_pair = new NameValuePair ("Level", "");
 		level_pair.entry.changed.connect (level_changed);
 
-		Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 		box.pack_start (save_open_box, false, false, 4);
 		box.pack_start (name_pair, false, false, 4);
 		box.pack_start (race_dropdown, false, false, 4);
 		box.pack_start (level_pair, false, false, 4);
 		box.pack_start (life_pair, false, false, 4);
+
+		gold_entry = new IntEntry ("Gold", -32768, 32767, 0);
+		gold_entry.int_entry.value_changed.connect(() => {
+			model.set_gold (gold_entry.get_value ());
+		});
+		box.pack_start (gold_entry, false, false, 0);
 
 		this.add (box);
 	}
@@ -118,6 +127,7 @@ public class CharacterEditor : Gtk.Window {
 			race_dropdown.set_value (model.get_race ());
 			level_pair.set_value (model.get_level ().to_string ());
 			life_pair.set_value (model.get_life ().to_string ());
+			gold_entry.set_value (model.get_gold ());
 		}
 
 		chooser.close ();
