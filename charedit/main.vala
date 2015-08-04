@@ -18,6 +18,8 @@ public class CharacterEditor : Gtk.Window {
 	IntEntry gold_entry;
 	/** @brief Place for entering XP. */
 	IntEntry exp_entry;
+	/** @brief Place for modifying magic. */
+	IntEntry magic_entry;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
@@ -77,7 +79,38 @@ public class CharacterEditor : Gtk.Window {
 		});
 		box.pack_start (exp_entry, false, false, 0);
 
+		magic_entry = new IntEntry ("Magic", 0, 255, 0);
+		magic_entry.int_entry.value_changed.connect(() => {
+			model.set_magic (magic_entry.get_value_as_int ());
+		});
+		box.pack_start (magic_entry, false, false, 0);
+
 		this.add (box);
+	}
+
+	/**
+	 * @brief Open the file chooser and load a save if selected.
+	 * @remark A callback for clicking the "Open..." button.
+	 */
+	private void open_chooser () {
+		var chooser = new Gtk.FileChooserDialog (
+				"Select your favorite file", this, Gtk.FileChooserAction.OPEN,
+				"_Cancel", Gtk.ResponseType.CANCEL,
+				"_Open", Gtk.ResponseType.ACCEPT);
+
+		if (chooser.run () == Gtk.ResponseType.ACCEPT) {
+			model = new PlayerModel (chooser.get_file ());
+			save_btn.set_sensitive (true);
+			name_pair.set_value (model.get_name ());
+			race_dropdown.set_value (model.get_race ());
+			level_pair.set_value (model.get_level ().to_string ());
+			life_pair.set_value (model.get_life ().to_string ());
+			gold_entry.set_value (model.get_gold ());
+			exp_entry.set_value (model.get_exp ());
+			magic_entry.set_value (model.get_magic ());
+		}
+
+		chooser.close ();
 	}
 
 	/**
@@ -118,29 +151,7 @@ public class CharacterEditor : Gtk.Window {
 		model.set_life (new_life_int);
 	}
 
-	/**
-	 * @brief Open the file chooser and load a save if selected.
-	 * @remark A callback for clicking the "Open..." button.
-	 */
-	private void open_chooser () {
-		var chooser = new Gtk.FileChooserDialog (
-				"Select your favorite file", this, Gtk.FileChooserAction.OPEN,
-				"_Cancel", Gtk.ResponseType.CANCEL,
-				"_Open", Gtk.ResponseType.ACCEPT);
 
-		if (chooser.run () == Gtk.ResponseType.ACCEPT) {
-			model = new PlayerModel (chooser.get_file ());
-			save_btn.set_sensitive (true);
-			name_pair.set_value (model.get_name ());
-			race_dropdown.set_value (model.get_race ());
-			level_pair.set_value (model.get_level ().to_string ());
-			life_pair.set_value (model.get_life ().to_string ());
-			gold_entry.set_value (model.get_gold ());
-			exp_entry.set_value (model.get_exp ());
-		}
-
-		chooser.close ();
-	}
 
 	/**
 	 * @brief Save the modified character data to the file.

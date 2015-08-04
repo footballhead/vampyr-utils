@@ -48,11 +48,9 @@ class IntEntry : Gtk.Box {
 	 * @brief Get the currently entered number as a double.
 	 * @return The value of the spin button.
 	 */
-	public double get_value () {
-		return int_entry.get_value ();
-	}
-
-
+	//public double get_value () {
+	//	return int_entry.get_value ();
+	//}
 
 	/**
 	 * @brief Modify the currently entered value.

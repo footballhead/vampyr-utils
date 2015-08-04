@@ -23,6 +23,8 @@ class PlayerModel {
 	private int gold;
 	/** @brief Current player XP. */
 	private int xp;
+	/** @brief Current and max player Magic. */
+	private int magic;
 
 	/**
 	 * @brief Load a player from a save file.
@@ -48,6 +50,7 @@ class PlayerModel {
 		// next 2 bytes are current life, which we don't care about
 		set_gold (0 | raw_buffer[17] | (raw_buffer[18] << 8));
 		set_exp (0 | raw_buffer[19] | (raw_buffer[20] << 8) | (raw_buffer[21] << 16) | (raw_buffer[22] << 24));
+		set_magic (raw_buffer[23]);
 	}
 
 	/**
@@ -78,6 +81,9 @@ class PlayerModel {
 		raw_buffer[20] = (uint8)((xp >> 8) & 0xff);
 		raw_buffer[21] = (uint8)((xp >> 16) & 0xff);
 		raw_buffer[22] = (uint8)((xp >> 24) & 0xff);
+
+		raw_buffer[23] = (uint8)magic;
+		raw_buffer[24] = (uint8)magic;
 
 		FileIOStream iostream = file.open_readwrite ();
 		OutputStream output = iostream.output_stream;
@@ -149,9 +155,14 @@ class PlayerModel {
 		stdout.printf ("DEBUG: Set XP %d\n", xp);
 	}
 
-	public File get_file () {
-		return this.file;
+	public void set_magic (int new_magic) {
+		magic = new_magic.clamp (0, 255);
+		stdout.printf ("DEBUG: Set Magic %d\n", magic);
 	}
+
+	//public File get_file () {
+	//	return this.file;
+	//}
 
 	public string get_name () {
 		return name;
@@ -173,8 +184,12 @@ class PlayerModel {
 		return gold;
 	}
 
-	public int get_exp() {
+	public int get_exp () {
 		return xp;
+	}
+
+	public int get_magic () {
+		return magic;
 	}
 }
 
