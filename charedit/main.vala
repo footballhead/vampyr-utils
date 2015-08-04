@@ -8,6 +8,8 @@ public class CharacterEditor : Gtk.Window {
 	private Gtk.Button save_btn;
 	/** @brief Where the name is entered. */
 	NameValuePair name_pair;
+	/** @brief Where race is chosen */
+	RaceDropdownBox race_dropdown;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
@@ -36,9 +38,15 @@ public class CharacterEditor : Gtk.Window {
 		name_pair = new NameValuePair ("Name", "");
 		name_pair.entry.changed.connect (name_changed);
 
+		race_dropdown = new RaceDropdownBox ("Race", Race.all_as_string ());
+		race_dropdown.combobox.changed.connect(() => {
+			model.set_race ( Race.from_string (race_dropdown.get_value ()));
+		});
+
 		Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 		box.pack_start (save_open_box, false, false, 4);
 		box.pack_start (name_pair, false, false, 4);
+		box.pack_start (race_dropdown, false, false, 4);
 
 		this.add (box);
 	}
@@ -71,6 +79,7 @@ public class CharacterEditor : Gtk.Window {
 			model = new PlayerModel (chooser.get_file ());
 			save_btn.set_sensitive (true);
 			name_pair.set_value (model.get_name ());
+			race_dropdown.set_value (model.get_race ());
 		}
 
 		chooser.close ();
@@ -106,6 +115,7 @@ class PlayerModel {
 	string name;
 	// Player saves are ALWAYS 77 bytes
 	uint8[] raw_buffer = new uint8[77];
+	Race race;
 
 	public PlayerModel (File file) {
 		this.file = file;
@@ -120,6 +130,8 @@ class PlayerModel {
 			formatter += "%c".printf (c);
 		}
 		set_name (formatter.strip ());
+
+		race = (Race)raw_buffer[11];
 	}
 
 	public File get_file () { return this.file; }
@@ -138,6 +150,15 @@ class PlayerModel {
 		stdout.printf ("DEBUG: %s\n", short_name);
 	}
 
+	public Race get_race () {
+		return race;
+	}
+
+	public void set_race (Race race) {
+		this.race = race;
+		stdout.printf ("DEBUG: Set race %s\n", race.to_string());
+	}
+
 	public void save () {
 		for (int i = 1; i < 11; i++) {
 			raw_buffer[i] = ' ';
@@ -146,6 +167,8 @@ class PlayerModel {
 		for (int i = 0; i < name.length; i++) {
 			raw_buffer[i+1] = name.data[i];
 		}
+
+		raw_buffer[11] = (uint8)race;
 
 		FileIOStream iostream = file.open_readwrite ();
 		OutputStream output = iostream.output_stream;
@@ -176,5 +199,69 @@ class NameValuePair : Gtk.Box {
 
 	public void set_value (string val) {
 		entry.set_text (val);
+	}
+}
+
+class RaceDropdownBox : Gtk.Box {
+	Gtk.Label name_label;
+	public Gtk.ComboBoxText combobox;
+
+	public RaceDropdownBox (string name, string[] def_val) {
+		this.orientation = Gtk.Orientation.HORIZONTAL;
+		this.spacing = 0;
+
+		name_label = new Gtk.Label (name);
+		combobox = new Gtk.ComboBoxText ();
+		foreach (unowned string str in def_val) {
+			combobox.append_text (str);
+		}
+
+		this.pack_start (name_label, true, true, 4 );
+		this.pack_start (combobox, true, true, 4 );
+	}
+
+	public string get_value () {
+		return combobox.get_active_text();
+	}
+
+	public void set_value (Race race) {
+		combobox.set_active (race);
+	}
+}
+
+enum Race {
+	HUMAN = 0,
+	DWARF = 1,
+	ELF = 2,
+	CORINTIR = 3,
+	VICTOR_SHAO = 4,
+	BRIAN_WESTON = 5;
+
+	public string to_string () {
+		switch (this) {
+			case HUMAN: return "Human";
+			case DWARF: return "Dwarf";
+			case ELF: return "Elf";
+			case CORINTIR: return "Corintir";
+			case VICTOR_SHAO: return "Victor Shao";
+			case BRIAN_WESTON: return "Brian Weston";
+			default: assert_not_reached ();
+		}
+	}
+
+	public static Race from_string (string race_str) {
+		switch (race_str) {
+			case "Human": return HUMAN;
+			case "Dwarf": return DWARF;
+			case "Elf": return ELF;
+			case "Corintir": return CORINTIR;
+			case "Victor Shao": return VICTOR_SHAO;
+			case "Brian Weston": return BRIAN_WESTON;
+			default: assert_not_reached ();
+		}
+	}
+
+	public static string[] all_as_string() {
+		return { "Human", "Dwarf", "Elf", "Corintir", "Victor Shao", "Brian Weston" };
 	}
 }
