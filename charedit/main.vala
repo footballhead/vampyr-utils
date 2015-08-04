@@ -10,6 +10,8 @@ public class CharacterEditor : Gtk.Window {
 	NameValuePair name_pair;
 	/** @brief Where race is chosen */
 	RaceDropdownBox race_dropdown;
+	/** @brief Where level is entered. */
+	NameValuePair level_pair;
 
 	/** @brief Create the main window and initialize all the widgets. */
 	public CharacterEditor () {
@@ -43,10 +45,14 @@ public class CharacterEditor : Gtk.Window {
 			model.set_race ( Race.from_string (race_dropdown.get_value ()));
 		});
 
+		level_pair = new NameValuePair ("Level", "");
+		level_pair.entry.changed.connect (level_changed);
+
 		Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 		box.pack_start (save_open_box, false, false, 4);
 		box.pack_start (name_pair, false, false, 4);
 		box.pack_start (race_dropdown, false, false, 4);
+		box.pack_start (level_pair, false, false, 4);
 
 		this.add (box);
 	}
@@ -56,13 +62,25 @@ public class CharacterEditor : Gtk.Window {
 	 * @remark Here we impose a 10 character limit on the name field to indicate
 	 *         that names are only stored as 10 characters in the file.
 	 */
-	private void name_changed() {
+	private void name_changed () {
 		string new_name = name_pair.get_value ();
 		if (new_name.length > 10) {
 			name_pair.set_value (new_name.slice (0,10));
 		}
 
 		model.set_name (new_name);
+	}
+
+	private void level_changed () {
+		string new_level_str = level_pair.get_value ();
+		int new_level_int = int.parse (new_level_str);
+		if (new_level_int > 255) {
+			level_pair.set_value ("255");
+		} else if (new_level_int < 0) {
+			level_pair.set_value ("0");
+		}
+
+		model.set_level (new_level_int);
 	}
 
 	/**
@@ -80,6 +98,7 @@ public class CharacterEditor : Gtk.Window {
 			save_btn.set_sensitive (true);
 			name_pair.set_value (model.get_name ());
 			race_dropdown.set_value (model.get_race ());
+			level_pair.set_value (model.get_level ().to_string ());
 		}
 
 		chooser.close ();
@@ -116,6 +135,7 @@ class PlayerModel {
 	// Player saves are ALWAYS 77 bytes
 	uint8[] raw_buffer = new uint8[77];
 	Race race;
+	int level;
 
 	public PlayerModel (File file) {
 		this.file = file;
@@ -132,6 +152,7 @@ class PlayerModel {
 		set_name (formatter.strip ());
 
 		race = (Race)raw_buffer[11];
+		level = (int)raw_buffer[12];
 	}
 
 	public File get_file () { return this.file; }
@@ -159,6 +180,16 @@ class PlayerModel {
 		stdout.printf ("DEBUG: Set race %s\n", race.to_string());
 	}
 
+	public void set_level (int new_level) {
+		int valid_level = new_level.clamp (0, 255);
+		level = valid_level;
+		stdout.printf ("DEBUG: Set level %d\n", valid_level);
+	}
+
+	public int get_level () {
+		return level;
+	}
+
 	public void save () {
 		for (int i = 1; i < 11; i++) {
 			raw_buffer[i] = ' ';
@@ -169,6 +200,7 @@ class PlayerModel {
 		}
 
 		raw_buffer[11] = (uint8)race;
+		raw_buffer[12] = (uint8)level;
 
 		FileIOStream iostream = file.open_readwrite ();
 		OutputStream output = iostream.output_stream;
