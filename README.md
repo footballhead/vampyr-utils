@@ -32,4 +32,4 @@ See [Map2PNG.md](Map2PNG.md) for more info.
 
 ## License
 
-MIT. See [LICENSE](license)
+MIT. See [LICENSE](LICENSE)
