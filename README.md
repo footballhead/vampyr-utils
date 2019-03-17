@@ -33,7 +33,4 @@ See `Map2PNG.md` for more info.
 
 ## License
 
-vampyr-utils is licensed under the _Do What the Fuck You Want To_ public
-license. A copy can be found in the `LICENSE` file in the base of the project
-directory. You can also find a copy at the license website:
-http://www.wtfpl.net
+MIT. See [LICENSE](license)
