@@ -5,3 +5,4 @@ Map2PNG.jar
 /bin/
 .classpath
 .project
+*.o
