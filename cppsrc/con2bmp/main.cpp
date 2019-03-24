@@ -34,6 +34,12 @@ struct cmdline_args {
     };
 };
 
+bool save_image(vampyrtools::image const& img, char const* file)
+{
+    auto constexpr rgb_comp = 3;
+    return stbi_write_bmp(file, img.width, img.height, rgb_comp, img.data.data()) != 0;
+}
+
 }
 
 int main(int argc, char** argv)
@@ -42,9 +48,8 @@ int main(int argc, char** argv)
     try {
         args = cmdline_args::parse(argc, argv);
 
-        auto const image = load_con(args.input, args.width, args.height);
-        auto constexpr rgb_comp = 3;
-        auto const result = stbi_write_bmp(args.output, args.width, args.height, rgb_comp, image.data());
+        auto const image = vampyrtools::load_con(args.input, args.width, args.height);
+        auto const result = save_image(image, args.output);
         if (result == 0) {
             std::cerr << "Failed to write output " << args.output << "\n";
             return 1;

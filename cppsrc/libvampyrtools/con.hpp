@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
+namespace vampyrtools {
+
 struct color {
     uint8_t r = 0x00;
     uint8_t g = 0x00;
@@ -41,4 +43,12 @@ auto constexpr ega_palette = palette{{
     color{0xFF, 0xFF, 0xFF}
 }};
 
-std::vector<color> load_con(char const* file, int width, int height, palette const& pal = ega_palette);
+struct image {
+    int width;
+    int height;
+    std::vector<color> data;
+};
+
+image load_con(char const* file, int width, int height, palette const& pal = ega_palette);
+
+} // namespace vampyrtools

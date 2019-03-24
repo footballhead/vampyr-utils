@@ -4,6 +4,8 @@
 
 namespace {
 
+using namespace vampyrtools;
+
 std::vector<char> read_input(char const* file, int count)
 {
     auto in = std::ifstream{file, std::ios_base::in | std::ios_base::binary};
@@ -48,7 +50,9 @@ std::vector<color> colorize(std::vector<char> const& data, palette const& pal)
 
 }
 
-std::vector<color> load_con(char const* file, int width, int height, palette const& pal)
+namespace vampyrtools {
+
+image load_con(char const* file, int width, int height, palette const& pal)
 {
     if (width <= 0) {
         throw std::invalid_argument{"Expected positive width"};
@@ -60,5 +64,7 @@ std::vector<color> load_con(char const* file, int width, int height, palette con
 
     auto const raw_data = read_input(file, width * height);
     auto const data = transpose(raw_data, height, width);
-    return colorize(data, pal);
+    return image{width, height, colorize(data, pal)};
 }
+
+} // namespace vampyrtools
