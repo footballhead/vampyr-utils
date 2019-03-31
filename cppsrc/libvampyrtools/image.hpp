@@ -63,6 +63,16 @@ struct rectangle {
     int h;
 };
 
+struct dimension {
+    int w = 0;
+    int h = 0;
+};
+
+struct point {
+    int x = 0;
+    int y = 0;
+};
+
 struct image {
     int width;
     int height;
@@ -78,8 +88,12 @@ struct image {
 
     image sub(rectangle const& rect) const;
 
+    void blit(image const& img, point const& p);
+
     static image from_file(char const* file);
     void save(char const* file) const;
+
+    static image from_black(dimension const& dim);
 };
 
 } // namespace vampyrtools

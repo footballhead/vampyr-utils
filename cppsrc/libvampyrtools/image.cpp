@@ -51,6 +51,16 @@ image image::sub(rectangle const& rect) const
     return {rect.w, rect.h, data};
 }
 
+void image::blit(image const& img, point const& p)
+{
+    for (int y = 0; y < img.height; ++y) {
+        for (int x = 0; x < img.width; ++x) {
+            auto const c = img.get(x, y);
+            set(c, x + p.x, y + p.y);
+        }
+    }
+}
+
 image image::from_file(char const* file)
 {
     int x = 0;
@@ -76,6 +86,11 @@ void image::save(char const* file) const
     if (result == 0) {
         throw std::runtime_error{"Failed to save image"};
     }
+}
+
+image image::from_black(dimension const& dim)
+{
+    return image{dim.w, dim.h, std::vector<color>(dim.w * dim.h, color{})};
 }
 
 } // namespace vampyrtools
