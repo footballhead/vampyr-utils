@@ -6,3 +6,4 @@ Map2PNG.jar
 .classpath
 .project
 *.o
+*.a
