@@ -1,5 +1,5 @@
 #include <libvampyrtools/con.hpp>
-#include <stb/stb_image_write.h>
+#include <libvampyrtools/stb_image_write.h>
 
 #include <fstream>
 #include <iostream>

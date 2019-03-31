@@ -1,7 +1,6 @@
 #include <libvampyrtools/image.hpp>
-
-#include <stb/stb_image.h>
-#include <stb/stb_image_write.h>
+#include <libvampyrtools/stb_image.h>
+#include <libvampyrtools/stb_image_write.h>
 
 #include <filesystem>
 #include <iostream>

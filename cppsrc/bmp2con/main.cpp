@@ -1,5 +1,5 @@
 #include <libvampyrtools/con.hpp>
-#include <stb/stb_image.h>
+#include <libvampyrtools/stb_image.h>
 
 #include <fstream>
 #include <iostream>
