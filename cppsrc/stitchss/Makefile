@@ -2,7 +2,7 @@ CXXFLAGS = -O2 -Wall -std=c++17 -I..
 
 LDFLAGS = -L../libvampyrtools -lvampyrtools
 
-stichss: main.o ../libvampyrtools/libvampyrtools.a
+stitchss: main.o ../libvampyrtools/libvampyrtools.a
 	$(CXX) main.o -o $@ $(LDFLAGS)
 
 main.o: main.cpp ../libvampyrtools/image.hpp
@@ -10,4 +10,4 @@ main.o: main.cpp ../libvampyrtools/image.hpp
 
 .PHONY: clean
 clean:
-	$(RM) *.o stichss
+	$(RM) *.o stitchss
