@@ -5,7 +5,7 @@ LDFLAGS = -L../libvampyrtools -lvampyrtools
 con2bmp: main.o ../libvampyrtools/libvampyrtools.a
 	$(CXX) main.o -o $@ $(LDFLAGS)
 
-main.o: main.cpp ../libvampyrtools/con.hpp ../libvampyrtools/stb_image_write.h
+main.o: main.cpp ../libvampyrtools/con.hpp
 	$(CXX) main.cpp -c -o main.o $(CXXFLAGS)
 
 .PHONY: clean
