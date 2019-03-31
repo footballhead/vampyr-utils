@@ -1,5 +1,8 @@
 #include "image.hpp"
 
+#include "stb_image.h"
+#include "stb_image_write.h"
+
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
@@ -35,6 +38,47 @@ char color_to_ega(color const& c)
     	throw std::invalid_argument{ss.str()};
     }
     return reverse_palette.at(c);
+}
+
+image image::sub(rectangle const& rect) const
+{
+    auto data = std::vector<color>{};
+    data.reserve(rect.w * rect.h);
+
+    for (int y = 0; y < rect.h; ++y) {
+        for (int x = 0; x < rect.w; ++x) {
+            data.push_back(get(x + rect.x, y + rect.y));
+        }
+    }
+
+    return {rect.w, rect.h, data};
+}
+
+image image::from_file(char const* file)
+{
+    int x = 0;
+    int y = 0;
+    int channels = 0;
+    auto const raw_image_data = stbi_load(file, &x, &y, &channels, STBI_rgb);
+    if (!raw_image_data) {
+        throw std::runtime_error{stbi_failure_reason()};
+    }
+
+    auto image_data = std::vector<color>{};
+    image_data.reserve(x*y);
+    for (auto i = 0; i < x*y; ++i) {
+        image_data.push_back(color{raw_image_data[i*3], raw_image_data[i*3+1], raw_image_data[i*3+2]});
+    }
+
+    return image{x, y, image_data};
+}
+
+void image::save(char const* file) const
+{
+    auto const result = stbi_write_bmp(file, width, height, STBI_rgb, data.data());
+    if (result == 0) {
+        throw std::runtime_error{"Failed to save image"};
+    }
 }
 
 } // namespace vampyrtools

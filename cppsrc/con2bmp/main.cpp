@@ -1,5 +1,4 @@
 #include <libvampyrtools/con.hpp>
-#include <libvampyrtools/stb_image_write.h>
 
 #include <fstream>
 #include <iostream>
@@ -32,12 +31,6 @@ struct cmdline_args {
     };
 };
 
-bool save_image(vampyrtools::image const& img, char const* file)
-{
-    auto constexpr rgb_comp = 3;
-    return stbi_write_bmp(file, img.width, img.height, rgb_comp, img.data.data()) != 0;
-}
-
 }
 
 int main(int argc, char** argv)
@@ -47,11 +40,7 @@ int main(int argc, char** argv)
         args = cmdline_args::parse(argc, argv);
 
         auto const image = vampyrtools::load_con(args.input, args.width, args.height);
-        auto const result = save_image(image, args.output);
-        if (result == 0) {
-            std::cerr << "Failed to write output " << args.output << "\n";
-            return 1;
-        }
+        image.save(args.output);
     } catch (std::exception const& e) {
         std::cerr << e.what() << "\n";
         std::cerr << "Usage: con2bmp INPUT.CON WIDTH HEIGHT OUTPUT.BMP\n";

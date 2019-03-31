@@ -1,6 +1,4 @@
 #include <libvampyrtools/image.hpp>
-#include <libvampyrtools/stb_image.h>
-#include <libvampyrtools/stb_image_write.h>
 
 #include <filesystem>
 #include <iostream>
@@ -37,33 +35,6 @@ struct cmdline_input {
 	}
 };
 
-image load_bmp(char const* file)
-{
-	int x = 0;
-	int y = 0;
-	int channels = 0;
-	auto const raw_image_data = stbi_load(file, &x, &y, &channels, STBI_rgb);
-	if (!raw_image_data) {
-		throw std::runtime_error{stbi_failure_reason()};
-	}
-
-	auto image_data = std::vector<color>{};
-	image_data.reserve(x*y);
-	for (auto i = 0; i < x*y; ++i) {
-		image_data.push_back(color{raw_image_data[i*3], raw_image_data[i*3+1], raw_image_data[i*3+2]});
-	}
-
-	return image{x, y, image_data};
-}
-
-void save_bmp(vampyrtools::image const& img, char const* file)
-{
-    auto const result = stbi_write_bmp(file, img.width, img.height, STBI_rgb, img.data.data());
-    if (result == 0) {
-    	throw std::runtime_error{"Failed to save image"};
-    }
-}
-
 } // namespace
 
 int main(int argc, char** argv) {
@@ -75,7 +46,7 @@ int main(int argc, char** argv) {
 				std::cerr << "Could not make out dir: " << args.outdir << "\n";
 				return 1;
 			}
-			auto const img = load_bmp(args.input);
+			auto const img = image::from_file(args.input);
 
 			for (int y = 0; y < img.height / args.height; y++) {
 				for (int x = 0; x < img.width / args.width; x++) {
@@ -83,7 +54,7 @@ int main(int argc, char** argv) {
 
 					auto outfile = std::ostringstream{};
 					outfile << args.outdir << "/" << x << "-" << y << ".bmp";
-					save_bmp(subimg, outfile.str().c_str());
+					subimg.save(outfile.str().c_str());
 				}
 			}
 			

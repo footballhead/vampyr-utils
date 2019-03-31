@@ -69,18 +69,10 @@ struct image {
         data[width * y + x] = c;
     }
 
-    image sub(rectangle const& rect) const {
-        auto data = std::vector<color>{};
-        data.reserve(rect.w * rect.h);
+    image sub(rectangle const& rect) const;
 
-        for (int y = 0; y < rect.h; ++y) {
-            for (int x = 0; x < rect.w; ++x) {
-                data.push_back(get(x + rect.x, y + rect.y));
-            }
-        }
-
-        return {rect.w, rect.h, data};
-    }
+    static image from_file(char const* file);
+    void save(char const* file) const;
 };
 
 } // namespace vampyrtools
