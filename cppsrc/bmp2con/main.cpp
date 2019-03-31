@@ -3,7 +3,6 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace std::string_literals;
 using namespace vampyrtools;
 
 namespace {
