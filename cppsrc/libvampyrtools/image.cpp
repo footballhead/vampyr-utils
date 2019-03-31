@@ -30,12 +30,12 @@ char color_to_ega(color const& c)
         {color{0xFF, 0xFF, 0xFF}, 15},
     };
     if (reverse_palette.find(c) == end(reverse_palette)) {
-    	auto ss = std::stringstream{};
-    	ss << "Invalid EGA color: ";
-    	ss << static_cast<int>(c.r);
-    	ss << ", " << static_cast<int>(c.g);
-    	ss << ", " << static_cast<int>(c.b);
-    	throw std::invalid_argument{ss.str()};
+        auto ss = std::stringstream{};
+        ss << "Invalid EGA color: ";
+        ss << static_cast<int>(c.r);
+        ss << ", " << static_cast<int>(c.g);
+        ss << ", " << static_cast<int>(c.b);
+        throw std::invalid_argument{ss.str()};
     }
     return reverse_palette.at(c);
 }
