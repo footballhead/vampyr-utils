@@ -68,7 +68,9 @@ image image::from_file(char const* file)
     int channels = 0;
     auto const raw_image_data = stbi_load(file, &x, &y, &channels, STBI_rgb);
     if (!raw_image_data) {
-        throw std::runtime_error{stbi_failure_reason()};
+        std::ostringstream ss{};
+        ss << stbi_failure_reason() << " (" << file << ")";
+        throw std::runtime_error{ss.str()};
     }
 
     auto image_data = std::vector<color>{};
