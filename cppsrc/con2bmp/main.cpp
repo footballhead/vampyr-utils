@@ -1,6 +1,5 @@
 #include <libvampyrtools/con.hpp>
 
-#include <fstream>
 #include <iostream>
 #include <string>
 
