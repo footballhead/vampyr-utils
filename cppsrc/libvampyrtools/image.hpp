@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <ostream>
 #include <stdexcept>
 #include <vector>
 
@@ -15,6 +16,12 @@ struct color {
         return r == other.r && g == other.g && b == other.b;
     }
 };
+
+inline std::ostream& operator<<(std::ostream& os, color const& c)
+{
+    os << "color{" << static_cast<int>(c.r) << ", " << static_cast<int>(c.g) << ", " << static_cast<int>(c.b) << "}";
+    return os;
+}
 
 struct palette {
     std::array<color, 16> colors;
