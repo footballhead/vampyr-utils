@@ -49,10 +49,38 @@ auto constexpr ega_palette = palette{{
 
 char color_to_ega(color const& c);
 
+struct rectangle {
+    int x;
+    int y;
+    int w;
+    int h;
+};
+
 struct image {
     int width;
     int height;
     std::vector<color> data;
+
+    color get(int x, int y) const {
+        return data[width * y + x];
+    }
+
+    void set(const color& c, int x, int y) {
+        data[width * y + x] = c;
+    }
+
+    image sub(rectangle const& rect) const {
+        auto data = std::vector<color>{};
+        data.reserve(rect.w * rect.h);
+
+        for (int y = 0; y < rect.h; ++y) {
+            for (int x = 0; x < rect.w; ++x) {
+                data.push_back(get(x + rect.x, y + rect.y));
+            }
+        }
+
+        return {rect.w, rect.h, data};
+    }
 };
 
 } // namespace vampyrtools
