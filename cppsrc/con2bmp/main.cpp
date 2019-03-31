@@ -35,9 +35,8 @@ struct cmdline_args {
 
 int main(int argc, char** argv)
 {
-    auto args = cmdline_args{};
     try {
-        args = cmdline_args::parse(argc, argv);
+        auto const args = cmdline_args::parse(argc, argv);
 
         auto const image = vampyrtools::load_con(args.input, args.width, args.height);
         image.save(args.output);
