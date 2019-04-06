@@ -1,0 +1,6 @@
+ENCONTER: ENCONTER.PAS
+	fpc ENCONTER.PAS
+
+.PHONY: clean
+clean:
+	$(RM) ENCONTER 
