@@ -56,6 +56,24 @@ image image::stitch(image const& other) const
     return sprite_sheet;
 }
 
+std::vector<image> image::split(extent const& tile_bounds) const
+{
+    auto images = std::vector<image>{};
+
+    auto const num_rows = get_bounds().h / tile_bounds.h;
+    auto const num_cols = get_bounds().w / tile_bounds.w;
+    images.reserve(num_rows * num_cols);
+
+    for (int y = 0; y < num_rows; y++) {
+        for (int x = 0; x < num_cols; x++) {
+            auto const sub_bounds = rectangle{x * tile_bounds.w, y * tile_bounds.h, tile_bounds};
+            images.push_back(sub(sub_bounds));
+        }
+    }
+
+    return images;
+}
+
 void image::save(char const* file) const
 {
     auto const result = stbi_write_bmp(file, get_bounds().w, get_bounds().h, STBI_rgb, get_data().data());

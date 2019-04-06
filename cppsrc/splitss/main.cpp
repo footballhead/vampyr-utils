@@ -1,19 +1,17 @@
-#include <libvampyrtools/image.hpp>
+#include <vampyrutils/image.hpp>
 
 #include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <string>
 
-using namespace vampyrtools;
+using namespace vampyrutils;
 
 namespace {
 
 struct cmdline_input {
     char const* input;
-    int width;
-    int height;
+    extent bounds;
     char const* outdir;
 
     static cmdline_input parse(int argc, char** argv) {
@@ -31,7 +29,7 @@ struct cmdline_input {
             throw std::invalid_argument{"Expected positive integer height"};
         }
 
-        return cmdline_input{argv[1], width, height, argv[4]};
+        return cmdline_input{argv[1], {width, height}, argv[4]};
     }
 };
 
@@ -46,16 +44,13 @@ int main(int argc, char** argv) {
                 std::cerr << "Could not make out dir: " << args.outdir << "\n";
                 return 1;
             }
-            auto const img = image::from_file(args.input);
 
-            for (int y = 0; y < img.height / args.height; y++) {
-                for (int x = 0; x < img.width / args.width; x++) {
-                    auto const subimg = img.sub({x * args.width, y * args.width, args.width, args.height});
+            auto const subimages = image::from_file(args.input).split(args.bounds);
 
-                    auto outfile = std::ostringstream{};
-                    outfile << args.outdir << "/" << x << "-" << y << ".bmp";
-                    subimg.save(outfile.str().c_str());
-                }
+            for (size_t i = 0; i < subimages.size(); ++i) {
+                auto outfile = std::ostringstream{};
+                outfile << args.outdir << "/" << i << ".bmp";
+                subimages[i].save(outfile.str().c_str());
             }
             
         } catch (std::runtime_error const& e) {

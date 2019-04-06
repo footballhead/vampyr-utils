@@ -1,11 +1,11 @@
 CXXFLAGS = -O2 -Wall -std=c++17 -I..
 
-LDFLAGS = -L../libvampyrtools -lvampyrtools -lstdc++fs
+LDFLAGS = -L../vampyrutils -lvampyrutils -lstdc++fs
 
-splitss: main.o ../libvampyrtools/libvampyrtools.a
+splitss: main.o ../vampyrutils/libvampyrutils.a
 	$(CXX) main.o -o $@ $(LDFLAGS)
 
-main.o: main.cpp ../libvampyrtools/image.hpp
+main.o: main.cpp ../vampyrutils/image.hpp
 	$(CXX) main.cpp -c -o main.o $(CXXFLAGS)
 
 .PHONY: clean

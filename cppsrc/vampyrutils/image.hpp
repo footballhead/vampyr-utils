@@ -20,6 +20,7 @@ struct image {
 
     image sub(rectangle const& rect) const;
     image stitch(image const& other) const;
+    std::vector<image> split(extent const& tile_bounds) const;
     void save(char const* file) const;
 
     void blit(image const& img, point const& p);
