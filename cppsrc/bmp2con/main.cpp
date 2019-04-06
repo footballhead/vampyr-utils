@@ -1,9 +1,9 @@
-#include <libvampyrtools/con.hpp>
+#include <vampyrutils/bmp2con.hpp>
 
 #include <iostream>
 #include <stdexcept>
 
-using namespace vampyrtools;
+using namespace vampyrutils;
 
 namespace {
 
@@ -28,13 +28,13 @@ int main(int argc, char** argv)
         auto const args = cmdline_input::parse(argc, argv);
 
         try {
-            auto const img = image::from_file(args.input);
-            save_as_con(img, args.output);
-        } catch (std::exception const& e) {
-            std::cerr << e.what() << std::endl;
+            bmp2con(image::from_file(args.input), args.output);
+        } catch (std::runtime_error const& e) {
+            std::cerr << e.what() << "\n";
         }
-    } catch(...) {
-        std::cerr << "Usage: bmp2con BMPFILE CONFILE\n";
+    } catch (std::invalid_argument const& e) {
+        std::cerr << e.what() << "\n";
+        std::cerr << "Usage: bmp2con INPUT.BMP OUTPUT.CON\n";
         return 1;
     }
 
