@@ -2,9 +2,6 @@
 { prints ENCONTER.SET in a human-readable way }
 { as a tab-delimited CSV }
 program EncounterPrinter;
-const
-  EncounterFile = 'ENCONTER.SET';
-  OutputFile = 'ENCONTER.CSV';
 type
   EncounterData = record
     icon : byte;
@@ -18,29 +15,37 @@ type
 var
   EncounterHandle : file of EncounterData;
   Encounter : EncounterData;
-  OutputHandle : Text;
 begin
-  Assign(EncounterHandle, EncounterFile);
-  Assign(OutputHandle, OutputFile);
+  if ParamCount <> 1 then
+  begin
+    WriteLn('Usage: ENCONTER.EXE ENCONTER.SET');
+    Halt(1);
+  end;
+  Assign(EncounterHandle, ParamStr(1));
+  {$i-}
   Reset(EncounterHandle);
-  Rewrite(OutputHandle);
-  WriteLn(OutputHandle, 'Icon'#9'AI'#9'Stack Size'#9'X'#9'Y'#9'Dialog 1'#9'Dialog 2');
+  {$i+}
+  if IOResult <> 0 then
+  begin
+    WriteLn('Could not open file: ', ParamStr(1));
+    Halt(1);
+  end;
+  WriteLn('Icon'#9'AI'#9'Stack Size'#9'X'#9'Y'#9'Dialog 1'#9'Dialog 2');
   repeat
     Read(EncounterHandle, Encounter);
-    Write(OutputHandle, Encounter.icon);
-    Write(OutputHandle, #9);
-    Write(OutputHandle, Encounter.ai);
-    Write(OutputHandle, #9);
-    Write(OutputHandle, Encounter.stackSize);
-    Write(OutputHandle, #9);
-    Write(OutputHandle, Encounter.x);
-    Write(OutputHandle, #9);
-    Write(OutputHandle, Encounter.y);
-    Write(OutputHandle, #9);
-    Write(OutputHandle, Encounter.dialog1);
-    Write(OutputHandle, #9);
-    WriteLn(OutputHandle, Encounter.dialog2);
+    Write(Encounter.icon);
+    Write(#9);
+    Write(Encounter.ai);
+    Write(#9);
+    Write(Encounter.stackSize);
+    Write(#9);
+    Write(Encounter.x);
+    Write(#9);
+    Write(Encounter.y);
+    Write(#9);
+    Write(Encounter.dialog1);
+    Write(#9);
+    WriteLn(Encounter.dialog2);
   until Eof(EncounterHandle);
   Close(EncounterHandle);
-  Close(OutputHandle);
-end.
+end.
