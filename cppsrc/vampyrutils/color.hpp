@@ -3,9 +3,8 @@
 #include <array>
 #include <ostream>
 #include <stdexcept>
-#include <vector>
 
-namespace vampyrtools {
+namespace vampyrutils {
 
 struct color {
     uint8_t r = 0x00;
@@ -30,7 +29,6 @@ struct palette {
         if (static_cast<decltype(colors)::size_type>(i) >= colors.size() || i < 0) {
             throw std::invalid_argument{"Bad palette index"};
         }
-
         return colors[i];
     }
 };
@@ -56,53 +54,15 @@ auto constexpr ega_palette = palette{{
 
 char color_to_ega(color const& c);
 
-struct rectangle {
-    int x;
-    int y;
-    int w;
-    int h;
-};
-
-struct dimension {
-    int w = 0;
-    int h = 0;
-};
-
-struct point {
-    int x = 0;
-    int y = 0;
-};
-
-struct image {
-    int width;
-    int height;
-    std::vector<color> data;
-
-    color get(int x, int y) const {
-        return data[width * y + x];
-    }
-
-    void set(const color& c, int x, int y) {
-        data[width * y + x] = c;
-    }
-
-    image sub(rectangle const& rect) const;
-
-    void blit(image const& img, point const& p);
-
-    static image from_file(char const* file);
-    void save(char const* file) const;
-
-    static image from_black(dimension const& dim);
-};
-
-} // namespace vampyrtools
+} // namespace vampyrutils
 
 namespace std {
-    template <>
-    struct hash<vampyrtools::color> {
-        size_t operator()(vampyrtools::color const& c) const {
-            return c.r << 16 | c.g << 8 | c.b;
-        }
-    };
+
+template <>
+struct hash<vampyrutils::color> {
+    size_t operator()(vampyrutils::color const& c) const {
+        return c.r << 16 | c.g << 8 | c.b;
+    }
+};
+
 } // namespace std
