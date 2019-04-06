@@ -5,6 +5,7 @@ all:
 	make -C bmp2con
 	make -C splitss
 	make -C stitchss
+	make -C map2bmp
 
 .PHONY: clean
 clean:
@@ -13,3 +14,4 @@ clean:
 	make -C bmp2con clean
 	make -C splitss clean
 	make -C stitchss clean
+	make -C map2bmp clean
