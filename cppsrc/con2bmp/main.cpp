@@ -1,15 +1,15 @@
-#include <libvampyrtools/con.hpp>
+#include <vampyrutils/con2bmp.hpp>
 
 #include <iostream>
-#include <string>
+
+using namespace vampyrutils;
 
 namespace {
 
 struct cmdline_args {
-    char* input;
-    int width;
-    int height;
-    char* output;
+    char const* input;
+    extent bounds;
+    char const* output;
 
     static cmdline_args parse(int argc, char** argv) {
         if (argc != 5) {
@@ -26,7 +26,7 @@ struct cmdline_args {
             throw std::invalid_argument{"Expected positive height"};
         }
 
-        return cmdline_args{argv[1], width, height, argv[4]};
+        return cmdline_args{argv[1], {width, height}, argv[4]};
     };
 };
 
@@ -36,10 +36,13 @@ int main(int argc, char** argv)
 {
     try {
         auto const args = cmdline_args::parse(argc, argv);
-
-        auto const image = vampyrtools::load_con(args.input, args.width, args.height);
-        image.save(args.output);
-    } catch (std::exception const& e) {
+        try {
+            con2bmp(args.input, args.bounds).save(args.output);
+        } catch (std::runtime_error const& e) {
+            std::cerr << e.what() << "\n";
+            return 1;
+        }
+    } catch (std::invalid_argument const& e) {
         std::cerr << e.what() << "\n";
         std::cerr << "Usage: con2bmp INPUT.CON WIDTH HEIGHT OUTPUT.BMP\n";
         return 1;
