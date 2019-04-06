@@ -45,11 +45,15 @@ image image::sub(rectangle const& rect) const
     return img;
 }
 
-void image::blit(image const& img, point const& p)
+image image::stitch(image const& other) const
 {
-    img.data.foreach([this, &p](point const& i, color const& c) {
-        set(c, p + i);
-    });
+    auto const bounds = extent{
+        get_bounds().w + other.get_bounds().w,
+        std::max(get_bounds().h, other.get_bounds().h)};
+    auto sprite_sheet = image::from_black(bounds);
+    sprite_sheet.blit(*this, {0, 0});
+    sprite_sheet.blit(other, {get_bounds().w, 0});
+    return sprite_sheet;
 }
 
 void image::save(char const* file) const
@@ -58,6 +62,13 @@ void image::save(char const* file) const
     if (result == 0) {
         throw std::runtime_error{"Failed to save image"};
     }
+}
+
+void image::blit(image const& img, point const& p)
+{
+    img.data.foreach([this, &p](point const& i, color const& c) {
+        set(c, p + i);
+    });
 }
 
 } // namespace vampyrutils

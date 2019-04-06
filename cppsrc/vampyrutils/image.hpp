@@ -19,6 +19,7 @@ struct image {
     std::vector<color>& get_data() { return data.data; }
 
     image sub(rectangle const& rect) const;
+    image stitch(image const& other) const;
     void save(char const* file) const;
 
     void blit(image const& img, point const& p);

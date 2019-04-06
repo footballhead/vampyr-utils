@@ -1,10 +1,9 @@
-#include <libvampyrtools/image.hpp>
+#include <vampyrutils/image.hpp>
 
 #include <iostream>
 #include <stdexcept>
-#include <vector>
 
-using namespace vampyrtools;
+using namespace vampyrutils;
 
 namespace {
 
@@ -13,8 +12,8 @@ struct cmdline_input {
     std::vector<char const*> input;
 
     static cmdline_input parse(int argc, char** argv) {
-        if (argc < 3) {
-            throw std::invalid_argument{"Need at least 2 args!"};
+        if (argc < 4) {
+            throw std::invalid_argument{"Need at least 3 args!"};
         }
 
         std::vector<char const*> inputs{};
@@ -39,17 +38,6 @@ std::vector<image> load_all_images(std::vector<char const*> const& files)
     return images;
 }
 
-dimension determine_sprite_sheet_dimensions(std::vector<image> const& images)
-{
-    dimension dim{0, 0};
-    for (auto const& img : images) {
-        dim.w += img.width;
-        dim.h = std::max(dim.h, img.height);
-    }
-
-    return dim;
-}
-
 } // namespace
 
 int main(int argc, char** argv)
@@ -60,22 +48,18 @@ int main(int argc, char** argv)
         try {
             auto const images = load_all_images(args.input);
 
-            auto const dim = determine_sprite_sheet_dimensions(images);
-            auto sprite_sheet = image::from_black(dim);
-
-            auto p = point{0, 0};
-            for (auto const& img : images) {
-                sprite_sheet.blit(img, p);
-                p.x += img.width;
+            auto sprite_sheet = images[0];
+            for (size_t i = 1; i < images.size(); ++i) {
+                sprite_sheet = sprite_sheet.stitch(images[i]);
             }
 
             sprite_sheet.save(args.output);
         } catch (std::exception const& e) {
-            std::cerr << e.what() << std::endl;
+            std::cerr << e.what() << "\n";
         }
     } catch(std::invalid_argument const& e) {
         std::cerr << e.what() << "\n";
-        std::cerr << "Usage: stitchss OUTPUT.BMP FILE1.BMP [FILE2.BMP ...]\n";
+        std::cerr << "Usage: stitchss OUTPUT.BMP FILE1.BMP FILE2.BMP [FILE3.BMP ...]\n";
         return 1;
     }
 
