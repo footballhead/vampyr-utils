@@ -1,5 +1,5 @@
 .PHONY: all
-all: ENCONTER sign
+all: ENCONTER sign mondat
 
 ENCONTER: ENCONTER.PAS
 	fpc ENCONTER.PAS
@@ -7,6 +7,9 @@ ENCONTER: ENCONTER.PAS
 sign: sign.pas
 	fpc sign.pas
 
+mondat: mondat.pas
+	fpc mondat.pas
+
 .PHONY: clean
 clean:
-	$(RM) ENCONTER 
+	$(RM) ENCONTER sign mondat
