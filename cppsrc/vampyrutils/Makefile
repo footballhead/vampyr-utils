@@ -1,7 +1,7 @@
-CXXFLAGS = -O2 -Wall -std=c++17 -fPIC
+CXXFLAGS = -O0 -g -Wall -std=c++17 -fPIC
 
-libvampyrutils.a: bmp2con.o color.o con2bmp.o image.o io.o math.o stb.o
-	$(AR) rcs libvampyrutils.a bmp2con.o color.o con2bmp.o image.o io.o math.o stb.o
+libvampyrutils.a: bmp2con.o color.o con2bmp.o csv.o image.o io.o math.o stb.o
+	$(AR) rcs libvampyrutils.a bmp2con.o color.o con2bmp.o csv.o image.o io.o math.o stb.o
 
 bmp2con.o: bmp2con.cpp bmp2con.hpp image.hpp
 	$(CXX) bmp2con.cpp -c -o bmp2con.o $(CXXFLAGS)
@@ -11,6 +11,9 @@ color.o: color.cpp color.hpp
 
 con2bmp.o: con2bmp.cpp con2bmp.hpp image.hpp
 	$(CXX) con2bmp.cpp -c -o con2bmp.o $(CXXFLAGS)
+
+csv.o: csv.cpp csv.hpp
+	$(CXX) csv.cpp -c -o csv.o $(CXXFLAGS)
 
 image.o: image.cpp image.hpp color.hpp math.hpp
 	$(CXX) image.cpp -c -o image.o $(CXXFLAGS)
