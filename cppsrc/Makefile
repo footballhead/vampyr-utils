@@ -6,6 +6,7 @@ all:
 	make -C splitss
 	make -C stitchss
 	make -C map2bmp
+	make -C map_layer_enconter
 
 .PHONY: clean
 clean:
@@ -15,3 +16,4 @@ clean:
 	make -C splitss clean
 	make -C stitchss clean
 	make -C map2bmp clean
+	make -C map_layer_enconter clean
