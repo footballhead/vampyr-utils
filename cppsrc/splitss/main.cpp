@@ -40,9 +40,11 @@ int main(int argc, char** argv) {
         auto const args = cmdline_input::parse(argc, argv);
 
         try {
-            if (!std::filesystem::create_directories(args.outdir)) {
-                std::cerr << "Could not make out dir: " << args.outdir << "\n";
-                return 1;
+            if (!std::filesystem::exists(args.outdir)) {
+                if (!std::filesystem::create_directories(args.outdir)) {
+                    std::cerr << "Could not make out dir: " << args.outdir << "\n";
+                    return 1;
+                }
             }
 
             auto const subimages = image::from_file(args.input).split(args.bounds);
