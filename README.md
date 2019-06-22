@@ -11,25 +11,6 @@ https://archive.org/details/msdos_VAMPYR20_shareware
 It can be played using DOSBox:
 http://www.dosbox.com/
 
-## Requirements
-
-  * Java Development Kit
-  * Apache Ant
-
-## Con2PNG
-
-Con2PNG is a utility which turns a _Vampyr_ image file, generally ending in 
-`.CON`, into an ordinary `.PNG` file.
-
-See [Con2PNG.md](Con2PNG.md) for more info.
-
-## Map2PNG
-
-Map2PNG is a utility which turns a _Vampyr_ `.MAP` file into a `.PNG` file using
-the provided tilesets.
-
-See [Map2PNG.md](Map2PNG.md) for more info.
-
 ## License
 
 MIT. See [LICENSE](LICENSE)
