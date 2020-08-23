@@ -15,4 +15,4 @@ VCHEAT: VCHEAT.pas
 
 .PHONY: clean
 clean:
-	$(RM) ENCONTER sign mondat VCHEAT
+	$(RM) ENCONTER sign mondat VCHEAT *.o
