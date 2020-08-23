@@ -1,4 +1,5 @@
-{ github.com/footballhead }
+{ For most applications, consider using the Superior race cheat }
+{ See https://vampyr-talisman-of-invocation.fandom.com/wiki/Save_File_Format#.22.22.22Superior.22.22.22 }
 program vcheat;
 const
     FileName = 'PLAYER.SAV';

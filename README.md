@@ -24,11 +24,16 @@ For `pascal`:
 
 ## Building
 
-Using CMake:
+For C++, use CMake:
 
 	mkdir build
 	cd build
 	cmake ..
+	make
+
+For Pascal, use Make:
+
+	cd pascal
 	make
 
 ## Utility Index

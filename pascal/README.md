@@ -5,3 +5,7 @@ Should compile using Free Pascal:
 
 	fpc ENCONTER.PAS
 	./ENCONTER
+
+To build all, use `make` in this directory:
+
+	make
