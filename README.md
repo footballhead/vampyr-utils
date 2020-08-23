@@ -15,7 +15,7 @@ http://www.dosbox.com/
 
 For `cppsrc`:
 
-* C++14 compiler
+* C++17 compiler
 * CMake 3.10+
 
 For `pascal`:
