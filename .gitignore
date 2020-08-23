@@ -7,3 +7,4 @@ Map2PNG.jar
 .project
 *.o
 *.a
+.vscode

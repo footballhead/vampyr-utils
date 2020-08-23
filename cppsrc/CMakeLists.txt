@@ -1,0 +1,7 @@
+add_subdirectory(bmp2con)
+add_subdirectory(con2bmp)
+add_subdirectory(map_layer_enconter)
+add_subdirectory(map2bmp)
+add_subdirectory(splitss)
+add_subdirectory(stitchss)
+add_subdirectory(vampyrutils)

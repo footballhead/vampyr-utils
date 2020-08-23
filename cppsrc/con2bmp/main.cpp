@@ -1,6 +1,7 @@
 #include <vampyrutils/con2bmp.hpp>
 
 #include <iostream>
+#include <string>
 
 using namespace vampyrutils;
 

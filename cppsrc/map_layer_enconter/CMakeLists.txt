@@ -1,0 +1,2 @@
+add_executable(map_layer_enconter main.cpp)
+target_link_libraries(map_layer_enconter vampyrutils)
